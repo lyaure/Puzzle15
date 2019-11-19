@@ -5,23 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:gravity="center_horizontal"
+    android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
-    android:padding="30dp"
+    android:padding="0dp"
     tools:context=".GameActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:orientation="horizontal">
+        android:layout_margin="30dp"
+        android:layout_marginBottom="0dp"
+        android:layout_weight="0"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Moves: "
+            android:textAlignment="viewStart"
             android:textColor="@android:color/background_dark"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -32,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Time: "
+            android:textAlignment="viewEnd"
             android:textColor="@android:color/background_dark"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -286,10 +293,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button5"
-        android:layout_width="120dp"
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="New game" />
+        android:layout_weight="0"
+        android:text="New Game" />
 
 </LinearLayout>
