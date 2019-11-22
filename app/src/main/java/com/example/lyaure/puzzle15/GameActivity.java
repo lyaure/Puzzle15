@@ -3,15 +3,24 @@ package com.example.lyaure.puzzle15;
 import android.animation.ValueAnimator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener{
 
-    TextView cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9,
+    private GameBoard board;
+    private TextView[][] txtV;
+    private TextView cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9,
             cell10, cell11, cell12, cell13, cell14, cell15, cell16;
+    private TextView moves;
 
-    TextView time;
+    private TextView time;
+
+    private Button btnNewGame;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +46,11 @@ public class GameActivity extends AppCompatActivity {
         });
         timer.start();
 
+        this.btnNewGame = findViewById(R.id.btnNewID);
+        this.btnNewGame.setOnClickListener(this);
+
+        this.moves = findViewById(R.id.movesTxtv);
+
         cell1 = findViewById(R.id.cell1);
         cell2 = findViewById(R.id.cell2);
         cell3 = findViewById(R.id.cell3);
@@ -54,14 +68,26 @@ public class GameActivity extends AppCompatActivity {
         cell15 = findViewById(R.id.cell15);
         cell16 = findViewById(R.id.cell16);
 
-        TextView[][] txtV = new TextView[4][4];
+        txtV = new TextView[4][4];
         txtV[0][0] = cell1; txtV[0][1] = cell2; txtV[0][2] = cell3; txtV[0][3] = cell4;
         txtV[1][0] = cell5; txtV[1][1] = cell6; txtV[1][2] = cell7; txtV[1][3] = cell8;
         txtV[2][0] = cell9; txtV[2][1] = cell10; txtV[2][2] = cell11; txtV[2][3] = cell12;
         txtV[3][0] = cell13; txtV[3][1] = cell14; txtV[3][2] = cell15; txtV[3][3] = cell16;
 
-        GameBoard board = new GameBoard();
+        board = new GameBoard();
+        setClick(true);
+        moves.setText("Moves: " + this.board.getMoves());
 
+        for(int i=0; i<4; i++)
+            for(int j=0; j<4; j++){
+                txtV[i][j].setOnClickListener(this);
+            }
+
+        display();
+
+    }
+
+    public void display(){
         for(int i=0; i<4; i++)
             for(int j=0; j<4; j++) {
                 txtV[i][j].setText(board.returnString(i, j));
@@ -70,9 +96,36 @@ public class GameActivity extends AppCompatActivity {
                 else
                     txtV[i][j].setBackgroundResource(R.drawable.textview_border);
             }
-
-
+        moves.setText("Moves: " + this.board.getMoves());
     }
 
+    @Override
+    public void onClick(View view) {
+        if(view == this.btnNewGame) {
+            this.board.newBoard();
+            setClick(true);
+            display();
+        }
+        else
+        {
+            for(int i=0; i<4; i++)
+                for(int j=0; j<4; j++){
+                    if(txtV[i][j] == view)
+                        if(board.move(i, j)) {
+                            display();
+                            if(this.board.isGameOver()) {
+                                Toast.makeText(this, "Game Over - Puzzle Solved", Toast.LENGTH_LONG).show();
+                                setClick(false);
+                                break;
+                            }
+                        }
+                }
+        }
+    }
 
+    public void setClick(boolean b){
+        for(int i=0; i<4; i++)
+            for(int j=0; j<4; j++)
+                txtV[i][j].setClickable(b);
+    }
 }

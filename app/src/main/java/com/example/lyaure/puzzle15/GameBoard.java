@@ -5,10 +5,14 @@ import java.util.Random;
 public class GameBoard {
     private int[][] board;
     private int moves;
-    private boolean isFinish;
+    private int iZero, jZero;
 
     public GameBoard() {
         this.board = new int[4][4];
+        newBoard();
+    }
+
+    public void newBoard(){
         int tmp = 1;
         for(int i=0; i<4; i++) {
             for (int j=0; j < 4; j++){
@@ -16,11 +20,13 @@ public class GameBoard {
                 tmp++;
             }
         }
+
+        this.iZero = 3;
+        this.jZero = 3;
         this.board[3][3] = 0;
+
         shuffle();
         this.moves = 0;
-        this.isFinish = false;
-
     }
 
     public String returnString(int i, int j){
@@ -32,7 +38,7 @@ public class GameBoard {
 
     private void shuffle(){
         int i = 3, j = 3;
-        int tmp = 1000;
+        int tmp = 500;
         Random rn = new Random();
 
         while (tmp>0){
@@ -41,6 +47,8 @@ public class GameBoard {
             switch (rand){
                 case 1:
                     if(i+1 < 4) {
+                        iZero = i;
+                        jZero = j;
                         swap(i, j, i+1, j);
                         i++;
                         tmp--;
@@ -70,23 +78,16 @@ public class GameBoard {
                 default:
                     break;
             }
-
-
         }
     }
 
-    public void move(int i, int j){
-        int iZero = -1;
-        int jZero = -1;
-        if(isMoveable(i, j, iZero, jZero)) {
+    public boolean move(int i, int j){
+        if(isMoveable(i, j)) {
             swap(i, j, iZero, jZero);
             this.moves ++;
-            // UPDATE UI BOARD
-            // UPDATE UI MOVES COUNT
+            return true;
         }
-        if(isFinish) {
-            // TODO
-        }
+        return false;
     }
 
     private void swap(int a, int b, int c, int d) {
@@ -95,7 +96,7 @@ public class GameBoard {
         this.board[c][d] = tmp;
     }
 
-    public boolean isMoveable(int i, int j, int iZero, int jZero) {
+    public boolean isMoveable(int i, int j) {
         if(i+1 < 4)
             if(this.board[i+1][j] == 0) {
                 iZero = i+1;
@@ -104,7 +105,7 @@ public class GameBoard {
             }
 
         if(i-1 >= 0)
-            if(this.board[i+1][j] == 0) {
+            if(this.board[i-1][j] == 0) {
                 iZero = i - 1;
                 jZero = j;
                 return true;
@@ -126,26 +127,23 @@ public class GameBoard {
         return false;
     }
 
-
-    public void findZero(int iZero, int jZero) {
-        for(int i=0; i<4; i++)
-            for(int j=0; j<4; j++)
-                if(this.board[i][j] == 0) {
-                    iZero = i;
-                    jZero = j;
-                }
+    public String getMoves(){
+        int tmp = this.moves;
+        String formatted = String.format("%04d", tmp);
+        return formatted;
     }
 
-    private void checkBoard() {
+    public boolean isGameOver(){
         int tmp = 1;
         for(int i=0; i<4; i++) {
-            for (int j = 0; j < 4; j++)
-                if (this.board[i][j] != tmp) {
-                    this.isFinish = false;
-                    return;
-                }
+            for (int j=0; j < 4; j++){
+                if(this.board[i][j] != tmp)
+                    return false;
+                tmp++;
+                if(tmp == 16)
+                    tmp = 0;
+            }
         }
-        this.isFinish = true;
+        return true;
     }
-
 }

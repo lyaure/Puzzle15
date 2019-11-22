@@ -10,14 +10,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 
-public class MainActivity extends AppCompatActivity{
-    Switch music;
-    MediaPlayer mp;
+public class MainActivity extends AppCompatActivity implements OnClickListener{
+    private Switch music;
+    private MediaPlayer mp;
+    private Button start;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity{
                     mp.pause();
             }
         });
+
+        start = findViewById(R.id.btnStartID);
+        start.setOnClickListener(this);
     }
 
     @Override
@@ -124,10 +129,13 @@ public class MainActivity extends AppCompatActivity{
         alertDialog.show();
     }
 
-    public void start_game(View view)
+    public void onClick(View view)
     {
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
+        if(view == this.start)
+        {
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+        }
     }
 
 }
