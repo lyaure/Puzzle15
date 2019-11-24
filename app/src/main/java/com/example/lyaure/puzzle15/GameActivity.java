@@ -24,7 +24,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnNewGame;
 
-    boolean isMusicOn = false;
+    private boolean isMusicOn = false;
+
+    private Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         time = findViewById(R.id.txvTimeID);
 
+        thread = createTimer();
+        thread.start();
 
         this.btnNewGame = findViewById(R.id.btnNewID);
         this.btnNewGame.setOnClickListener(this);
@@ -138,5 +142,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         if(isMusicOn)
             mp.start();
+    }
+
+    public Thread createTimer(){
+        return new Thread(new Runnable() {
+            int s = 0, m = 0;
+            @Override
+            public void run() {
+                while(true){
+                    s++;
+                    if(s == 60){
+                        m++;
+                        s = 0;
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            time.setText("Time: " + String.format("%02d", m) + ":" + String.format("%02d", s));
+                        }
+                    });
+                    SystemClock.sleep(1000);
+                }
+            }
+        });
     }
 }
