@@ -27,6 +27,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isMusicOn = false;
 
     private Thread thread;
+    private boolean threadOnPause = false;
+    int sec = 0, min = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +106,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if(view == this.btnNewGame) {
+            min = 0;
+            sec = 0;
             this.board.newBoard();
             setClick(true);
+            threadOnPause = false;
             display();
         }
         else
@@ -115,6 +121,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         if(board.move(i, j)) {
                             display();
                             if(this.board.isGameOver()) {
+                                threadOnPause = true;
                                 Toast.makeText(this, "Game Over - Puzzle Solved", Toast.LENGTH_LONG).show();
                                 setClick(false);
                                 break;
@@ -135,6 +142,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         if(isMusicOn)
             mp.pause();
+
+        threadOnPause = true;
     }
 
     @Override
@@ -142,27 +151,31 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         if(isMusicOn)
             mp.start();
+
+        threadOnPause = false;
     }
 
     public Thread createTimer(){
         return new Thread(new Runnable() {
-            int s = 0, m = 0;
             @Override
             public void run() {
                 while(true){
-                    s++;
-                    if(s == 60){
-                        m++;
-                        s = 0;
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            time.setText("Time: " + String.format("%02d", m) + ":" + String.format("%02d", s));
+                    if(!threadOnPause) {
+                        sec++;
+                        if(sec == 60){
+                            min++;
+                            sec = 0;
                         }
-                    });
-                    SystemClock.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                time.setText("Time: " + String.format("%02d", min) + ":" + String.format("%02d", sec));
+                            }
+                        });
+                        SystemClock.sleep(1000);
+                    }
+
                 }
             }
         });
