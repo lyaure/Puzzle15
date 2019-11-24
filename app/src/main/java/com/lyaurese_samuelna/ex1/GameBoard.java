@@ -1,4 +1,4 @@
-package com.example.lyaure.puzzle15;
+package com.lyaurese_samuelna.ex1;
 
 import java.util.Random;
 

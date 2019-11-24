@@ -1,4 +1,4 @@
-package com.example.lyaure.puzzle15;
+package com.lyaurese_samuelna.ex1;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

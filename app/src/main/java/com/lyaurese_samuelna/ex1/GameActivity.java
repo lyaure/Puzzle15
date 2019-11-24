@@ -1,4 +1,4 @@
-package com.example.lyaure.puzzle15;
+package com.lyaurese_samuelna.ex1;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener{
 
