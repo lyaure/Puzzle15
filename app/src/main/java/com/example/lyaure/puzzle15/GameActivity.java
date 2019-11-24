@@ -1,55 +1,52 @@
 package com.example.lyaure.puzzle15;
 
-import android.animation.ValueAnimator;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private MediaPlayer mp;
+
     private GameBoard board;
     private TextView[][] txtV;
     private TextView cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9,
             cell10, cell11, cell12, cell13, cell14, cell15, cell16;
     private TextView moves;
-
     private TextView time;
 
     private Button btnNewGame;
+
+    boolean isMusicOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        time = findViewById(R.id.time);
 
+        mp = MediaPlayer.create(this, R.raw.song);
 
-        int secondsToRun = 999;
+        SharedPreferences sp = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        isMusicOn = sp.getBoolean("music", false);
+        if(isMusicOn){
+            mp.setLooping(true);
+            mp.start();
+        }
 
-        ValueAnimator timer = ValueAnimator.ofInt(secondsToRun);
-        timer.setDuration(secondsToRun * 1000).setInterpolator(new LinearInterpolator());
-        timer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int elapsedSeconds = (int) animation.getAnimatedValue();
-                int minutes = elapsedSeconds / 60;
-                int seconds = elapsedSeconds % 60;
+        time = findViewById(R.id.txvTimeID);
 
-                time.setText(String.format("Time: %02d:%02d", minutes, seconds));
-            }
-        });
-        timer.start();
 
         this.btnNewGame = findViewById(R.id.btnNewID);
         this.btnNewGame.setOnClickListener(this);
 
-        this.moves = findViewById(R.id.movesTxtv);
+        this.moves = findViewById(R.id.txvMovesID);
 
         cell1 = findViewById(R.id.cell1);
         cell2 = findViewById(R.id.cell2);
@@ -127,5 +124,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         for(int i=0; i<4; i++)
             for(int j=0; j<4; j++)
                 txtV[i][j].setClickable(b);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(isMusicOn)
+            mp.pause();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(isMusicOn)
+            mp.start();
     }
 }

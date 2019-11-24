@@ -23,7 +23,7 @@
         android:paddingRight="15dp">
 
         <TextView
-            android:id="@+id/movesTxtv"
+            android:id="@+id/txvMovesID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -34,7 +34,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/txvTimeID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

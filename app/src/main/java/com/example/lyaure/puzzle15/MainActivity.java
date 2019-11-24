@@ -1,7 +1,9 @@
 package com.example.lyaure.puzzle15;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +19,9 @@ import android.widget.Switch;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
     private Switch music;
-    private MediaPlayer mp;
     private Button start;
+    private SharedPreferences sp;
+
 
 
     @Override
@@ -26,43 +29,30 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mp = MediaPlayer.create(this, R.raw.song);
-        mp.setLooping(true);
+        sp = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 
         music = findViewById(R.id.switch_music);
+        boolean m = sp.getBoolean("music", false);
+        music.setChecked(m);
         music.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b)
                 {
-                    mp.start();
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean("music", true);
+                    editor.commit();
                 }
-                else
-                    mp.pause();
+                else {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean("music", false);
+                    editor.commit();
+                }
             }
         });
 
         start = findViewById(R.id.btnStartID);
         start.setOnClickListener(this);
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        if(music.isChecked())
-        {
-            //mp.pause();
-        }
-
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        if(music.isChecked())
-        {
-            //mp.start();
-        }
     }
 
     @Override
@@ -115,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                mp.stop();
+                //mp.stop();
                 finish();  // destroy this activity
             }
         });
