@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|center"
     android:layout_margin="20dp"
+    android:gravity="center_vertical|center"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -22,6 +24,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_gravity="center_vertical|center_horizontal"
         android:layout_margin="0dp"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
